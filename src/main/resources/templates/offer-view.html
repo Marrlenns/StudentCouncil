@@ -123,10 +123,34 @@
         </div>
     </div>
 
+    <!-- Замена внутри блока комментариев -->
     <div class="comments-section">
         <h3>Комментарии</h3>
-        <!-- Здесь позже появятся комментарии -->
+
+        <!-- Список комментариев -->
+        <ul style="padding-left: 0;">
+            <li th:each="comment : ${comments}" style="margin-bottom: 15px; list-style: none; border-bottom: 1px solid #30363d; padding-bottom: 10px;">
+                <p>
+                    <strong th:text="${comment.author}" style="color: #58a6ff;"></strong>
+                    <span th:text="${comment.formattedDate}" style="font-size: 12px; color: #8b949e;"></span>
+                </p>
+                <p th:text="${comment.text}" style="color: #c9d1d9;"></p>
+            </li>
+        </ul>
+
+        <!-- Форма добавления комментария -->
+        <form th:action="@{'/offers/' + ${offer.id} + '/comment'}" method="post" style="margin-top: 30px;">
+        <textarea name="commentText" rows="4" cols="60" placeholder="Оставьте комментарий..." required
+                  style="width: 100%; padding: 10px; background-color: #0d1117; color: #e6edf3; border: 1px solid #30363d; border-radius: 8px;"></textarea>
+            <br/>
+            <button type="submit"
+                    style="margin-top: 10px; padding: 8px 16px; background-color: #238636; border: none; color: white; border-radius: 6px; cursor: pointer;">
+                Отправить
+            </button>
+        </form>
     </div>
+
+
 </div>
 
 <!-- Полноэкранный оверлей -->

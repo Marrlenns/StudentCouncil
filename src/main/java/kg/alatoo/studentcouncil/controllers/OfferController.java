@@ -1,9 +1,13 @@
 package kg.alatoo.studentcouncil.controllers;
 
+import kg.alatoo.studentcouncil.dto.CommentDto;
+import kg.alatoo.studentcouncil.entities.Comment;
 import kg.alatoo.studentcouncil.entities.Offer;
 import kg.alatoo.studentcouncil.entities.User;
 import kg.alatoo.studentcouncil.entities.Vote;
 import kg.alatoo.studentcouncil.repositories.UserRepository;
+import kg.alatoo.studentcouncil.repositories.VoteRepository;
+import kg.alatoo.studentcouncil.services.CommentService;
 import kg.alatoo.studentcouncil.services.OfferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -13,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -22,6 +27,7 @@ public class OfferController {
 
     private final OfferService offerService;
     private final UserRepository userRepository;
+    private final CommentService commentService;
 
     @GetMapping("/offer/new")
     public String showForm() {
@@ -49,9 +55,23 @@ public class OfferController {
     @GetMapping("/offers/{id}")
     public String viewOffer(@PathVariable Long id, Model model) {
         Offer offer = offerService.getOffer(id);
+        List<Comment> comments = commentService.getCommentsByOffer(offer);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+
+        List<CommentDto> commentDtos = comments.stream()
+                .map(comment -> new CommentDto(
+                        comment.getAuthor().getUsername(),
+                        comment.getText(),
+                        comment.getCreatedAt().format(formatter)
+                ))
+                .toList();
+
         model.addAttribute("offer", offer);
+        model.addAttribute("comments", commentDtos);
         return "offer-view";
     }
+
 
     @GetMapping("/offers")
     public String listOffers(Model model, Authentication authentication) {
@@ -84,5 +104,14 @@ public class OfferController {
         return "redirect:/offers";
     }
 
+    @PostMapping("/offers/{id}/comment")
+    public String addComment(@PathVariable Long id,
+                             @RequestParam String commentText,
+                             Authentication authentication) {
+        Offer offer = offerService.getOffer(id);
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow();
+        commentService.addComment(commentText, user, offer);
+        return "redirect:/offers/" + id;
+    }
 
 }

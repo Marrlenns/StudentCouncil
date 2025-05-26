@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -40,9 +41,8 @@ public class Offer {
 
     @Column(nullable = false)
     private int dislikes = 0;
-//
-//
+
 //    @OneToMany
-//    private List<Review> reviews;
+//    private List<Comment> comments;
 
 }
