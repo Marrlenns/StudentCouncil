@@ -2,6 +2,7 @@ package kg.alatoo.studentcouncil.controllers;
 
 import kg.alatoo.studentcouncil.entities.Offer;
 import kg.alatoo.studentcouncil.entities.User;
+import kg.alatoo.studentcouncil.entities.Vote;
 import kg.alatoo.studentcouncil.repositories.UserRepository;
 import kg.alatoo.studentcouncil.services.OfferService;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +69,18 @@ public class OfferController {
     @PostMapping("/offers/{id}/delete")
     public String deleteOffer(@PathVariable Long id) {
         offerService.deleteOffer(id);
+        return "redirect:/offers";
+    }
+
+    @PostMapping("/offers/{id}/like")
+    public String like(@PathVariable Long id, Authentication authentication) {
+        offerService.vote(id, authentication.getName(), Vote.VoteType.LIKE);
+        return "redirect:/offers";
+    }
+
+    @PostMapping("/offers/{id}/dislike")
+    public String dislike(@PathVariable Long id, Authentication authentication) {
+        offerService.vote(id, authentication.getName(), Vote.VoteType.DISLIKE);
         return "redirect:/offers";
     }
 

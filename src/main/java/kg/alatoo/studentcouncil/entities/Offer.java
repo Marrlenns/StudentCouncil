@@ -35,11 +35,11 @@ public class Offer {
     private User author;
 
 
-//    @OneToMany
-//    private List<User> likes;
-//
-//    @OneToMany
-//    private List<User> dislikes;
+    @Column(nullable = false)
+    private int likes = 0;
+
+    @Column(nullable = false)
+    private int dislikes = 0;
 //
 //
 //    @OneToMany

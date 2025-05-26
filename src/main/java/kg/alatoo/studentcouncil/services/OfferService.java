@@ -2,6 +2,7 @@ package kg.alatoo.studentcouncil.services;
 
 import kg.alatoo.studentcouncil.entities.Offer;
 import kg.alatoo.studentcouncil.entities.User;
+import kg.alatoo.studentcouncil.entities.Vote;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,4 +16,6 @@ public interface OfferService {
     List<Offer> getAllOffers();
 
     void deleteOffer(Long id);
+
+    void vote(Long id, String name, Vote.VoteType voteType);
 }

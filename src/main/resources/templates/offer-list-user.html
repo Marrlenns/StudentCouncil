@@ -66,11 +66,36 @@
             max-height: 140px;
             overflow: hidden;
         }
+        .actions {
+            margin-top: 10px;
+        }
+        .actions button {
+            background-color: transparent;
+            color: #e6edf3;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .actions button:hover {
+            background-color: #30363d;
+        }
     </style>
 </head>
 <body>
 
-<h1>Все предложения</h1>
+<!-- Header with Logout -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <h1>Все предложения</h1>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit"
+                style="background-color: transparent; color: #e6edf3; border: 1px solid #30363d;
+                       border-radius: 6px; padding: 8px 16px; cursor: pointer; font-size: 14px;">
+            Выйти
+        </button>
+    </form>
+</div>
 
 <ul>
     <li th:each="offer : ${offers}">
@@ -78,9 +103,19 @@
         <div class="text-block">
             <a th:href="@{'/offers/' + ${offer.id}}" th:text="${offer.title}" class="title">Название</a>
             <p class="description" th:text="${offer.description}">Описание...</p>
+
+            <div class="actions">
+                <form th:action="@{'/offers/' + ${offer.id} + '/like'}" method="post" style="display:inline;">
+                    <button type="submit">👍 <span th:text="${offer.likes}">0</span></button>
+                </form>
+                <form th:action="@{'/offers/' + ${offer.id} + '/dislike'}" method="post" style="display:inline; margin-left:10px;">
+                    <button type="submit">👎 <span th:text="${offer.dislikes}">0</span></button>
+                </form>
+            </div>
         </div>
     </li>
 </ul>
 
 </body>
+
 </html>
