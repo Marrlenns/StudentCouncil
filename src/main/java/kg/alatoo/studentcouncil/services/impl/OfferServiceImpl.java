@@ -6,8 +6,6 @@ import kg.alatoo.studentcouncil.repositories.OfferRepository;
 import kg.alatoo.studentcouncil.repositories.UserRepository;
 import kg.alatoo.studentcouncil.services.OfferService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,4 +52,11 @@ public class OfferServiceImpl implements OfferService {
     public List<Offer> getAllOffers() {
         return offerRepository.findAll();
     }
+
+
+    @Override
+    public void deleteOffer(Long id) {
+        offerRepository.deleteById(id);
+    }
+
 }

@@ -53,10 +53,23 @@ public class OfferController {
     }
 
     @GetMapping("/offers")
-    public String listOffers(Model model) {
+    public String listOffers(Model model, Authentication authentication) {
         List<Offer> offers = offerService.getAllOffers();
         model.addAttribute("offers", offers);
-        return "offer-list";  // имя Thymeleaf шаблона для списка
+
+        if (authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
+            return "offer-list-admin";
+        }
+
+        return "offer-list-user";
     }
+
+    @PostMapping("/offers/{id}/delete")
+    public String deleteOffer(@PathVariable Long id) {
+        offerService.deleteOffer(id);
+        return "redirect:/offers";
+    }
+
 
 }
