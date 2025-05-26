@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add New Offer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #ffe6f0, #ffd1dc);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #d63384;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #fff0f5;
+            border: 4px dashed #ff69b4;
+            border-radius: 25px;
+            padding: 30px 40px;
+            width: 400px;
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
+            position: relative;
+        }
+
+        .form-container h2 {
+            font-family: 'Pacifico', cursive;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-container label {
+            font-weight: bold;
+        }
+
+        .form-container input[type="text"],
+        .form-container textarea,
+        .form-container input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 16px 0;
+            border: 2px solid #ffb6c1;
+            border-radius: 10px;
+            background-color: #fff;
+        }
+
+        .form-container button {
+            background-color: #ff69b4;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 20px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-container button:hover {
+            background-color: #ff1493;
+        }
+
+        .kitty {
+            width: 60px;
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            transform: rotate(10deg);
+        }
+
+        .error {
+            text-align: center;
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <img class="kitty" src="https://freepnglogo.com/images/all_img/1718884189hello-kitty-png-stickers.png" alt="Hello Kitty" />
+    <h2>Add an Offer 🎀</h2>
+    <form method="post" enctype="multipart/form-data" th:action="@{/offers}">
+        <label for="title">Title:</label>
+        <input type="text" name="title" id="title" required/>
+
+        <label for="description">Description:</label>
+        <textarea name="description" id="description" rows="4" required></textarea>
+
+        <label for="image">Image:</label>
+        <input type="file" name="image" id="image" accept="image/*" required/>
+
+        <button type="submit">Save Offer 💕</button>
+    </form>
+    <p class="error" th:text="${error}"></p>
+</div>
+</body>
+</html>

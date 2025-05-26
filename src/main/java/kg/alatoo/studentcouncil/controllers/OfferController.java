@@ -1,4 +1,62 @@
 package kg.alatoo.studentcouncil.controllers;
 
+import kg.alatoo.studentcouncil.entities.Offer;
+import kg.alatoo.studentcouncil.entities.User;
+import kg.alatoo.studentcouncil.repositories.UserRepository;
+import kg.alatoo.studentcouncil.services.OfferService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
+
+@Controller
+@RequiredArgsConstructor
 public class OfferController {
+
+    private final OfferService offerService;
+    private final UserRepository userRepository;
+
+    @GetMapping("/offer/new")
+    public String showForm() {
+        return "offer-form";
+    }
+
+    @PostMapping("/offers")
+    public String createOffer(@RequestParam String title,
+                                @RequestParam String description,
+                                @RequestParam MultipartFile image,
+                                Model model) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String username = auth.getName();
+            User user = userRepository.findByUsername(username).orElseThrow();
+
+            Offer offer = offerService.saveOffer(title, description, image, user);
+            return "redirect:/offers/" + offer.getId();
+        } catch (Exception e) {
+            model.addAttribute("error", "Ошибка при сохранении продукта");
+            return "offer-form";
+        }
+    }
+
+    @GetMapping("/offers/{id}")
+    public String viewOffer(@PathVariable Long id, Model model) {
+        Offer offer = offerService.getOffer(id);
+        model.addAttribute("offer", offer);
+        return "offer-view";
+    }
+
+    @GetMapping("/offers")
+    public String listOffers(Model model) {
+        List<Offer> offers = offerService.getAllOffers();
+        model.addAttribute("offers", offers);
+        return "offer-list";  // имя Thymeleaf шаблона для списка
+    }
+
 }
