@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -67,8 +68,13 @@ public class OfferController {
                 ))
                 .toList();
 
+        String offerAuthor = offer.getAuthor().getUsername();
+        String offerCreatedAt = offer.getCreated().format(formatter);
+
         model.addAttribute("offer", offer);
         model.addAttribute("comments", commentDtos);
+        model.addAttribute("offerAuthor", offerAuthor);
+        model.addAttribute("offerCreatedAt", offerCreatedAt);
         return "offer-view";
     }
 
@@ -92,16 +98,27 @@ public class OfferController {
         return "redirect:/offers";
     }
 
-    @PostMapping("/offers/{id}/like")
-    public String like(@PathVariable Long id, Authentication authentication) {
-        offerService.vote(id, authentication.getName(), Vote.VoteType.LIKE);
-        return "redirect:/offers";
-    }
+    @PostMapping("/offers/{id}/{type}")
+    @ResponseBody
+    public Map<String, Integer> vote(@PathVariable Long id,
+                                     @PathVariable String type,
+                                     Authentication authentication) {
+        Vote.VoteType voteType;
+        if (type.equalsIgnoreCase("like")) {
+            voteType = Vote.VoteType.LIKE;
+        } else if (type.equalsIgnoreCase("dislike")) {
+            voteType = Vote.VoteType.DISLIKE;
+        } else {
+            throw new IllegalArgumentException("Invalid vote type");
+        }
 
-    @PostMapping("/offers/{id}/dislike")
-    public String dislike(@PathVariable Long id, Authentication authentication) {
-        offerService.vote(id, authentication.getName(), Vote.VoteType.DISLIKE);
-        return "redirect:/offers";
+        offerService.vote(id, authentication.getName(), voteType);
+        Offer offer = offerService.getOffer(id);
+
+        return Map.of(
+                "likes", offer.getLikes(),
+                "dislikes", offer.getDislikes()
+        );
     }
 
     @PostMapping("/offers/{id}/comment")

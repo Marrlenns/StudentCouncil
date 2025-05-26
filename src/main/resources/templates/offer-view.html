@@ -6,190 +6,430 @@
     <style>
         body {
             margin: 0;
-            padding: 40px;
+            padding: 0;
             font-family: 'Roboto', sans-serif;
             background-color: #0d1117;
             color: #e6edf3;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        .container {
+        nav.sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background-color: #161b22;
             display: flex;
             flex-direction: column;
-            max-width: 1300px;
-            margin: 0 auto 0 200px;
-            background-color: #161b22;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
-            padding: 40px;
+            align-items: center;
+            padding: 30px 10px 10px 10px;
+            border-right: 1px solid #30363d;
+            justify-content: space-between;
         }
 
-        .header {
+        .sidebar-top {
             display: flex;
-            gap: 40px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
         }
 
-        .header img {
-            width: 500px;
-            height: 500px;       /* фиксированная высота */
+        nav.sidebar .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #30363d;
+            margin-bottom: 30px;
+        }
+
+        nav.sidebar button {
+            width: 100%;
+            background: none;
+            border: none;
+            color: #8b949e;
+            padding: 12px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        nav.sidebar button:hover {
+            background-color: #238636;
+            color: white;
+        }
+
+        nav.sidebar hr {
+            width: 100%;
+            border: none;
+            border-top: 1px solid #30363d;
+            margin: 8px 0;
+        }
+
+        main.content {
+            flex-grow: 1;
+            background-color: #161b22;
+            margin: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.6);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .offer-frame {
+            flex: 1;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            display: flex;
+            padding: 20px;
+            gap: 30px;
+            background-color: #0d1117;
+            overflow: hidden;
+        }
+
+        .offer-left {
+            width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .offer-author-time {
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #8b949e;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-self: flex-start;
+            text-align: left;
+        }
+
+        .offer-author-time strong {
+            font-weight: 700;
+            color: #58a6ff;
+        }
+
+        .offer-image {
+            width: 600px;
+            height: 600px;
             border-radius: 10px;
-            object-fit: cover;   /* заполнить контейнер, сохраняя пропорции */
+            object-fit: cover;
             border: 1px solid #30363d;
             cursor: pointer;
             transition: transform 0.3s ease;
         }
 
-
-        .header img:hover {
+        .offer-image:hover {
             transform: scale(1.03);
         }
 
-        .text-block {
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .actions button {
+            background: none;
+            border: 1px solid #30363d;
+            color: #8b949e;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .actions button:hover {
+            background-color: #238636;
+            color: white;
+        }
+
+        .offer-right {
             flex: 1;
-            min-width: 280px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding-left: 15px;
         }
 
-        .text-block h2 {
-            font-size: 32px;
-            font-weight: 700;
-            color: #58a6ff;
-            margin-bottom: 20px;
+        .scrollable-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
         }
 
-        .text-block p {
-            font-size: 18px;
-            line-height: 1.6;
-            white-space: pre-line;
-            color: #c9d1d9;
-        }
-
-        .comments-section {
-            border-top: 1px solid #30363d;
-            padding-top: 30px;
-        }
-
-        .comments-section h3 {
+        .offer-title {
             font-size: 24px;
+            font-weight: 700;
             color: #58a6ff;
             margin-bottom: 10px;
         }
 
-        /* Полноэкранный просмотр изображения */
-        #fullscreenOverlay {
-            display: none;
+        .offer-description {
+            font-size: 15px;
+            line-height: 1.4;
+            color: #c9d1d9;
+            margin-bottom: 20px;
+            white-space: pre-line;
+        }
+
+        .comments-container {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .comments-container h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: #58a6ff;
+        }
+
+        .comment {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 12px;
+        }
+
+        .comment:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #30363d;
+            border-radius: 50%;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-author {
+            font-weight: 700;
+            color: #58a6ff;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .comment-date {
+            font-size: 12px;
+            color: #8b949e;
+            margin-left: 8px;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            color: #c9d1d9;
+            white-space: pre-line;
+        }
+
+        form.comment-form {
+            display: flex;
+            gap: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #30363d;
+        }
+
+        form.comment-form textarea {
+            flex-grow: 1;
+            resize: vertical;
+            min-height: 50px;
+            max-height: 120px;
+            background-color: #0d1117;
+            color: #e6edf3;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 10px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            outline: none;
+        }
+
+        form.comment-form textarea:focus {
+            border-color: #238636;
+        }
+
+        form.comment-form button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #58a6ff;
+            font-size: 24px;
+            align-self: flex-end;
+        }
+
+        form.comment-form button:hover {
+            color: #a0c4ff;
+        }
+
+        /* Fullscreen overlay */
+        .fullscreen-overlay {
             position: fixed;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
             background-color: rgba(0, 0, 0, 0.9);
+            display: none;
             justify-content: center;
             align-items: center;
             z-index: 9999;
         }
 
-        #fullscreenOverlay img {
-            max-width: 90vw;
-            max-height: 90vh;
+        .fullscreen-overlay img {
+            max-width: 95%;
+            max-height: 95%;
             border-radius: 12px;
-            box-shadow: 0 0 30px #58a6ff;
-        }
-
-        #fullscreenOverlay .close-btn {
-            position: fixed;
-            top: 20px;
-            right: 30px;
-            font-size: 40px;
-            color: #58a6ff;
-            cursor: pointer;
-            user-select: none;
-            font-weight: 700;
-            transition: color 0.3s ease;
-        }
-
-        #fullscreenOverlay .close-btn:hover {
-            color: #a0c4ff;
+            box-shadow: 0 0 20px black;
         }
     </style>
 </head>
-<body>
+<body th:data-offer-id="${offer.id}">
 
-<div class="container">
-    <div class="header">
-        <img id="offerImage" th:src="'data:image/jpeg;base64,' + ${offer.imageUrl}" alt="Product Image"/>
-        <div class="text-block">
-            <h2 th:text="${offer.title}">Product Title</h2>
-            <p th:text="${offer.description}">Product Description</p>
+<nav class="sidebar">
+    <div class="sidebar-top">
+        <div class="avatar" title="User Avatar"></div>
+
+        <button>Home</button>
+        <hr>
+        <button>My profile</button>
+        <hr>
+        <button>My offers</button>
+        <hr>
+    </div>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" style="color:#f85149;">Log out</button>
+    </form>
+</nav>
+
+<main class="content">
+    <div class="offer-frame">
+        <div class="offer-left">
+            <div class="offer-author-time">
+                <strong th:text="${offerAuthor}">Meerim Mazaripova</strong>
+                <span id="offerTime" th:text="${offerCreatedAt}">2 hours ago</span>
+            </div>
+            <img id="offerImage" class="offer-image"
+                 th:src="'data:image/jpeg;base64,' + ${offer.imageUrl}" alt="Product Image" />
+            <div class="actions">
+                <button type="button" onclick="vote('like')">👍 <span id="likeCount" th:text="${offer.likes}">0</span></button>
+                <button type="button" onclick="vote('dislike')">👎 <span id="dislikeCount" th:text="${offer.dislikes}">0</span></button>
+            </div>
+        </div>
+
+        <div class="offer-right">
+            <div class="scrollable-content">
+                <h2 class="offer-title" th:text="${offer.title}">Product Title</h2>
+                <p class="offer-description" th:text="${offer.description}">
+                    Product description goes here...
+                </p>
+
+                <div class="comments-container">
+                    <h3>Comments</h3>
+                    <ul style="padding-left: 0; margin: 0;">
+                        <li class="comment" th:each="comment : ${comments}">
+                            <div class="comment-avatar" title="User Avatar"></div>
+                            <div class="comment-content">
+                                <div>
+                                    <span class="comment-author" th:text="${comment.author}">User Name</span>
+                                    <span class="comment-date" th:text="${comment.formattedDate}">2 hours ago</span>
+                                </div>
+                                <p class="comment-text" th:text="${comment.text}">
+                                    Comment text goes here...
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <form class="comment-form" th:action="@{'/offers/' + ${offer.id} + '/comment'}" method="post">
+                <textarea name="commentText" placeholder="Add comment..." required></textarea>
+                <button type="submit" title="Send comment">&#9658;</button>
+            </form>
         </div>
     </div>
+</main>
 
-    <!-- Замена внутри блока комментариев -->
-    <div class="comments-section">
-        <h3>Комментарии</h3>
-
-        <!-- Список комментариев -->
-        <ul style="padding-left: 0;">
-            <li th:each="comment : ${comments}" style="margin-bottom: 15px; list-style: none; border-bottom: 1px solid #30363d; padding-bottom: 10px;">
-                <p>
-                    <strong th:text="${comment.author}" style="color: #58a6ff;"></strong>
-                    <span th:text="${comment.formattedDate}" style="font-size: 12px; color: #8b949e;"></span>
-                </p>
-                <p th:text="${comment.text}" style="color: #c9d1d9;"></p>
-            </li>
-        </ul>
-
-        <!-- Форма добавления комментария -->
-        <form th:action="@{'/offers/' + ${offer.id} + '/comment'}" method="post" style="margin-top: 30px;">
-        <textarea name="commentText" rows="4" cols="60" placeholder="Оставьте комментарий..." required
-                  style="width: 100%; padding: 10px; background-color: #0d1117; color: #e6edf3; border: 1px solid #30363d; border-radius: 8px;"></textarea>
-            <br/>
-            <button type="submit"
-                    style="margin-top: 10px; padding: 8px 16px; background-color: #238636; border: none; color: white; border-radius: 6px; cursor: pointer;">
-                Отправить
-            </button>
-        </form>
-    </div>
-
-
-</div>
-
-<!-- Полноэкранный оверлей -->
-<div id="fullscreenOverlay">
-    <span class="close-btn" id="closeFullscreen">&times;</span>
-    <img id="fullscreenImage" src="" alt="Full Screen Image"/>
+<!-- Fullscreen overlay for image -->
+<div class="fullscreen-overlay" id="fullscreenOverlay">
+    <img id="fullscreenImage" src="" alt="Fullscreen Image">
 </div>
 
 <script>
+    function vote(type) {
+        const offerId = document.body.getAttribute('data-offer-id');
+        fetch(`/offers/${offerId}/${type}`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('Ошибка при голосовании');
+                return res.json();
+            })
+            .then(data => {
+                document.getElementById('likeCount').textContent = data.likes;
+                document.getElementById('dislikeCount').textContent = data.dislikes;
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Ошибка при отправке лайка/дизлайка");
+            });
+    }
+
+    function formatOfferTime() {
+        const span = document.getElementById('offerTime');
+        if (!span) return;
+        const publishedStr = span.getAttribute('data-published');
+        if (!publishedStr) return;
+
+        const publishedDate = new Date(publishedStr);
+        const now = new Date();
+        const diffMs = now - publishedDate;
+        const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+
+        if (diffHrs < 24) {
+            span.textContent = `${diffHrs} hour${diffHrs !== 1 ? 's' : ''} ago`;
+        } else {
+            const day = String(publishedDate.getDate()).padStart(2, '0');
+            const month = String(publishedDate.getMonth() + 1).padStart(2, '0');
+            const year = publishedDate.getFullYear();
+            const hours = String(publishedDate.getHours()).padStart(2, '0');
+            const minutes = String(publishedDate.getMinutes()).padStart(2, '0');
+            span.textContent = `${day}.${month}.${year} ${hours}:${minutes}`;
+        }
+    }
+
+    formatOfferTime();
+
+    // Fullscreen image logic
     const offerImage = document.getElementById('offerImage');
     const fullscreenOverlay = document.getElementById('fullscreenOverlay');
     const fullscreenImage = document.getElementById('fullscreenImage');
-    const closeBtn = document.getElementById('closeFullscreen');
 
     offerImage.addEventListener('click', () => {
         fullscreenImage.src = offerImage.src;
         fullscreenOverlay.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Запретить скролл страницы
     });
 
-    closeBtn.addEventListener('click', () => {
+    fullscreenOverlay.addEventListener('click', () => {
         fullscreenOverlay.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    });
-
-    // Закрыть полноэкранный режим при клике вне изображения
-    fullscreenOverlay.addEventListener('click', (e) => {
-        if (e.target === fullscreenOverlay) {
-            fullscreenOverlay.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-    });
-
-    // Закрыть по ESC
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && fullscreenOverlay.style.display === 'flex') {
-            fullscreenOverlay.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
+        fullscreenImage.src = '';
     });
 </script>
 
