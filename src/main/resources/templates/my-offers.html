@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Все предложения</title>
+    <title>Мои предложения</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -62,6 +62,11 @@
             color: #272c5c;
         }
 
+        .sidebar nav a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+        }
+
         .logout-btn {
             color: white;
             background: none;
@@ -102,12 +107,26 @@
             margin-left: 320px;
             margin-right: 40px;
             padding: 40px;
-            padding-top: 80px;
+            padding-top: 120px;
             width: calc(100% - 360px);
         }
 
-        h1 {
-            display: none;
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c2f5c;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 0;
         }
 
         .offers-container {
@@ -119,6 +138,39 @@
             padding: 40px;
             font-size: 18px;
             color: #666;
+        }
+
+        .no-offers {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .no-offers h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #999;
+        }
+
+        .no-offers p {
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .no-offers .create-offer-link {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #2c2f5c;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .no-offers .create-offer-link:hover {
+            background-color: #1d1f3b;
+            transform: translateY(-2px);
         }
 
         .offer-card {
@@ -135,6 +187,7 @@
             height: 340px;
             opacity: 1;
             transform: translateY(0);
+            position: relative;
         }
 
         .offer-card.fade-out {
@@ -149,6 +202,46 @@
 
         .offer-card:hover {
             background-color: #f0f0f0;
+        }
+
+        .offer-actions-top {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .offer-actions-top button {
+            background-color: rgba(44, 47, 92, 0.8);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .offer-actions-top button:hover {
+            background-color: #2c2f5c;
+            transform: scale(1.05);
+        }
+
+        .offer-actions-top .edit-btn {
+            background-color: rgba(0, 150, 0, 0.8);
+        }
+
+        .offer-actions-top .edit-btn:hover {
+            background-color: rgba(0, 120, 0, 1);
+        }
+
+        .offer-actions-top .delete-btn {
+            background-color: rgba(220, 0, 0, 0.8);
+        }
+
+        .offer-actions-top .delete-btn:hover {
+            background-color: rgba(180, 0, 0, 1);
         }
 
         .offer-left {
@@ -275,7 +368,7 @@
         <nav>
             <a href="/offers">Home</a>
             <a href="/profile">My profile</a>
-            <a href="/my-offers">My offers</a>
+            <a href="/my-offers" class="active">My offers</a>
         </nav>
     </div>
     <form th:action="@{/logout}" method="post">
@@ -295,10 +388,25 @@
 <a href="http://localhost:6969/offer/new" class="add-offer-btn" title="Добавить предложение">＋</a>
 
 <main class="content">
-    <h1>Все предложения</h1>
+    <div class="page-header">
+        <h1 class="page-title">Мои предложения</h1>
+        <p class="page-subtitle" th:text="'Автор: ' + ${currentUser}"></p>
+    </div>
 
     <div class="offers-container" id="offers-container">
+        <div th:if="${#lists.isEmpty(offers)}" class="no-offers">
+            <h3>У вас пока нет предложений</h3>
+            <p>Создайте своё первое предложение и поделитесь им с сообществом!</p>
+            <a href="/offer/new" class="create-offer-link">Создать предложение</a>
+        </div>
+
         <div th:each="offer : ${offers}" class="offer-card">
+            <!-- Кнопки управления оффером -->
+            <div class="offer-actions-top">
+                <button class="edit-btn" th:onclick="'editOffer(' + ${offer.id} + ')'">✏️ Редактировать</button>
+                <button class="delete-btn" th:onclick="'deleteOffer(' + ${offer.id} + ')'">🗑️ Удалить</button>
+            </div>
+
             <div class="offer-left">
                 <div class="offer-meta">
                     <strong th:text="${offer.author}">Автор</strong> |
@@ -359,6 +467,10 @@
         function createOfferCard(offer) {
             return `
                 <div class="offer-card fade-in">
+                    <div class="offer-actions-top">
+                        <button class="edit-btn" onclick="editOffer(${offer.id})">✏️ Редактировать</button>
+                        <button class="delete-btn" onclick="deleteOffer(${offer.id})">🗑️ Удалить</button>
+                    </div>
                     <div class="offer-left">
                         <div class="offer-meta">
                             <strong>${offer.author}</strong> |
@@ -384,13 +496,24 @@
 
             container.innerHTML = '<div class="loading">Загрузка...</div>';
 
-            fetch(`/offers/filter?sort=${sort}`)
+            fetch(`/my-offers/filter?sort=${sort}`)
                 .then(response => {
                     if (!response.ok) throw new Error('Ошибка загрузки');
                     return response.json();
                 })
                 .then(offers => {
                     container.innerHTML = '';
+
+                    if (offers.length === 0) {
+                        container.innerHTML = `
+                            <div class="no-offers">
+                                <h3>У вас пока нет предложений</h3>
+                                <p>Создайте своё первое предложение и поделитесь им с сообществом!</p>
+                                <a href="/offer/new" class="create-offer-link">Создать предложение</a>
+                            </div>
+                        `;
+                        return;
+                    }
 
                     offers.forEach(offer => {
                         container.innerHTML += createOfferCard(offer);
@@ -425,7 +548,6 @@
                 this.classList.add('active');
 
                 currentSort = filter;
-
                 loadOffers(filter);
 
                 const url = new URL(window.location);
@@ -433,6 +555,34 @@
                 window.history.pushState({}, '', url);
             });
         });
+
+        window.editOffer = function(offerId) {
+            window.location.href = `/offer/edit/${offerId}`;
+        };
+
+        window.deleteOffer = function(offerId) {
+            if (confirm('Вы уверены, что хотите удалить это предложение?')) {
+                fetch(`/offers/${offerId}/delete`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Перезагружаем список офферов
+                            loadOffers(currentSort);
+                            alert('Предложение успешно удалено');
+                        } else {
+                            throw new Error('Ошибка при удалении');
+                        }
+                    })
+                    .catch(error => {
+                        alert('Произошла ошибка при удалении');
+                        console.error(error);
+                    });
+            }
+        };
 
         attachLikeHandlers();
     });

@@ -16,6 +16,4 @@ public class CommentDto {
         this.text = text;
         this.formattedDate = formattedDate;
     }
-
-    // геттеры и сеттеры
 }

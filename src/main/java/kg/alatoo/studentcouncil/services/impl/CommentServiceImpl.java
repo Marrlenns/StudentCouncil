@@ -31,4 +31,9 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> getCommentsByOffer(Offer offer) {
         return commentRepository.findByOfferOrderByCreatedAtDesc(offer);
     }
+
+    @Override
+    public int countCommentsByOffer(Offer offer) {
+        return commentRepository.countByOffer(offer);
+    }
 }

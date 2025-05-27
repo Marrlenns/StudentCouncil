@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByOfferOrderByCreatedAtDesc(Offer offer);
+    int countByOffer(Offer offer);
 }

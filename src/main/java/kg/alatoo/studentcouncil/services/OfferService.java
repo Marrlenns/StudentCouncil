@@ -18,4 +18,6 @@ public interface OfferService {
     void deleteOffer(Long id);
 
     void vote(Long id, String name, Vote.VoteType voteType);
+
+    List<Offer> getOffersByUser(User user);
 }

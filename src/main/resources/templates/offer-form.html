@@ -1,99 +1,183 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Add New Offer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <title>New Offer</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            background: linear-gradient(to right, #ffe6f0, #ffd1dc);
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            color: #d63384;
+            display: flex;
+            font-family: 'Segoe UI', sans-serif;
+            height: 100vh;
+            background-color: #ffffff;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 320px; /* Increased width */
+            background-color: #272c5c;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .sidebar .profile {
+            text-align: center;
+            padding: 30px;
+            border-bottom: 1px solid white;
+        }
+
+        .sidebar .profile img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar nav a {
+            padding: 20px;
+            color: white;
+            text-decoration: none;
+            border-top: 1px solid white;
+            border-bottom: 1px solid white;
+            text-align: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar nav a:hover {
+            background-color: white;
+            color: #272c5c;
+        }
+
+
+        .sidebar .logout {
+            padding: 20px;
+            border-top: 1px solid white;
+            text-align: center;
+        }
+
+        .sidebar .logout a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .content {
+            margin-left: 340px;
+            width: calc(100% - 340px);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
 
-        .form-container {
-            background-color: #fff0f5;
-            border: 4px dashed #ff69b4;
-            border-radius: 25px;
-            padding: 30px 40px;
-            width: 400px;
-            box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
-            position: relative;
-        }
-
-        .form-container h2 {
-            font-family: 'Pacifico', cursive;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .form-container label {
-            font-weight: bold;
-        }
-
-        .form-container input[type="text"],
-        .form-container textarea,
-        .form-container input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0 16px 0;
-            border: 2px solid #ffb6c1;
-            border-radius: 10px;
-            background-color: #fff;
-        }
-
-        .form-container button {
-            background-color: #ff69b4;
-            color: white;
-            padding: 12px;
-            border: none;
+        .form-box {
+            background-color: white;
+            border: 1px solid #aaa;
             border-radius: 20px;
+            padding: 40px 50px;
+            width: 700px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.08);
+        }
+
+        .form-box h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 26px;
+        }
+
+        .form-box label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .form-box input[type="text"],
+        .form-box textarea,
+        .form-box input[type="file"] {
             width: 100%;
-            font-size: 16px;
+            padding: 14px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            font-size: 15px;
+        }
+
+        .form-box textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-box button {
+            background-color: #272c5c;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 25px;
+            width: 100%;
+            font-size: 18px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
 
-        .form-container button:hover {
-            background-color: #ff1493;
-        }
-
-        .kitty {
-            width: 60px;
-            position: absolute;
-            top: -30px;
-            right: -30px;
-            transform: rotate(10deg);
+        .form-box button:hover {
+            background-color: #1d224a;
         }
 
         .error {
-            text-align: center;
             color: red;
-            font-size: 14px;
+            text-align: center;
             margin-top: 10px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-<div class="form-container">
-    <img class="kitty" src="https://freepnglogo.com/images/all_img/1718884189hello-kitty-png-stickers.png" alt="Hello Kitty" />
-    <h2>Add an Offer 🎀</h2>
-    <form method="post" enctype="multipart/form-data" th:action="@{/offers}">
-        <label for="title">Title:</label>
-        <input type="text" name="title" id="title" required/>
+<div class="sidebar">
+    <div>
+        <div class="profile">
+            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="User Icon">
+        </div>
+        <nav>
+            <a href="/offers">Home</a>
+            <a href="/profile">My profile</a>
+            <a href="/my-offers">My offers</a>
+        </nav>
+    </div>
+    <div class="logout">
+        <a href="/logout">Log out</a>
+    </div>
+</div>
 
-        <label for="description">Description:</label>
-        <textarea name="description" id="description" rows="4" required></textarea>
+<div class="content">
+    <div class="form-box">
+        <h2>New offer</h2>
+        <form method="post" enctype="multipart/form-data" th:action="@{/offers}">
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" required>
 
-        <label for="image">Image:</label>
-        <input type="file" name="image" id="image" accept="image/*" required/>
+            <label for="description">Description</label>
+            <textarea name="description" id="description" required></textarea>
 
-        <button type="submit">Save Offer 💕</button>
-    </form>
-    <p class="error" th:text="${error}"></p>
+            <label for="image">Image</label>
+            <input type="file" name="image" id="image" accept="image/*" required>
+
+            <button type="submit">Submit</button>
+        </form>
+        <p class="error" th:text="${error}"></p>
+    </div>
 </div>
 </body>
 </html>

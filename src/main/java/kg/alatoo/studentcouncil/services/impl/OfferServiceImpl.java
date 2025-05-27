@@ -10,6 +10,7 @@ import kg.alatoo.studentcouncil.services.OfferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -74,12 +75,10 @@ public class OfferServiceImpl implements OfferService {
         if (existingVote.isPresent()) {
             Vote vote = existingVote.get();
             if (vote.getVoteType() == voteType) {
-                // Нажал повторно — удаляем голос
                 voteRepository.delete(vote);
                 if (voteType == Vote.VoteType.LIKE) offer.setLikes(offer.getLikes() - 1);
                 else offer.setDislikes(offer.getDislikes() - 1);
             } else {
-                // Изменил лайк на дизлайк или наоборот
                 if (voteType == Vote.VoteType.LIKE) {
                     offer.setLikes(offer.getLikes() + 1);
                     offer.setDislikes(offer.getDislikes() - 1);
@@ -91,7 +90,6 @@ public class OfferServiceImpl implements OfferService {
                 voteRepository.save(vote);
             }
         } else {
-            // Первый голос
             Vote vote = new Vote();
             vote.setUser(user);
             vote.setOffer(offer);
@@ -103,6 +101,12 @@ public class OfferServiceImpl implements OfferService {
         }
 
         offerRepository.save(offer);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Offer> getOffersByUser(User user) {
+        return offerRepository.findByAuthorOrderByCreatedDesc(user);
     }
 
 }
